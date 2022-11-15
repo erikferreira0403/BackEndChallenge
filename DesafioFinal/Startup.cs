@@ -1,11 +1,5 @@
-using DesafioFinal.Data;
-using DesafioFinal.Models;
-using DesafioFinal.Repositorio.SubscriptionRepo;
-using DesafioFinal.Repositorio.UserRepo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,10 +24,7 @@ namespace DesafioFinal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>();
-            services.AddScoped<ISubscriptionRepo, SubscriptionRepo>();
-            services.AddScoped<IUserRepo, UserRepo>();
-
+            services.AddInfrastructure();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
