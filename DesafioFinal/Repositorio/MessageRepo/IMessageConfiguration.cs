@@ -4,6 +4,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
 {
     public interface IMessageConfiguration
     {
-        MessageModel Enviar(MessageModel messageModel);
+        User Enviar(User messageModel);
+        User Receber(User messageModel);
     }
 }

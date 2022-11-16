@@ -9,5 +9,7 @@ namespace DesafioFinal.Repositorio.UserRepo
     {
         Task<IEnumerable<User>> Get();
         Task<User> Create(User user, string FullName);
+
+        Task<User> Save(User user);
     }
 }

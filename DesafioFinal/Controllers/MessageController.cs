@@ -10,8 +10,6 @@ namespace DesafioFinal.Controllers
     [Route("api/messages")]
     public class MessageController : Controller
     {
-        private const string QUEUE_NAME = "messages";
-        private readonly ConnectionFactory _factory;
         private readonly IMessageConfiguration _configuration;
         public MessageController(IMessageConfiguration configuration)
         {
@@ -19,7 +17,7 @@ namespace DesafioFinal.Controllers
             _configuration = configuration;
         }
         [HttpPost]
-        public IActionResult SendMessage([FromBody] MessageModel SendMessageInputModel)
+        public IActionResult SendMessage([FromBody] User SendMessageInputModel)
         {
             _configuration.Enviar(SendMessageInputModel);
             return Accepted();
