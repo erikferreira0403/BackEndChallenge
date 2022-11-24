@@ -1,3 +1,4 @@
+using DesafioFinal.Repositorio.MessageRepo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +16,11 @@ namespace DesafioFinal
 {
     public class Startup
     {
+       
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+        
         }
 
         public IConfiguration Configuration { get; }
@@ -25,9 +28,11 @@ namespace DesafioFinal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            { { } }
             services.AddInfrastructure();
-            services.AddControllers().AddJsonOptions(x =>
-   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+          //  services.AddControllers().AddJsonOptions(x =>
+         //   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,6 +43,8 @@ namespace DesafioFinal
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            //_Messageconfig.Receber();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -45,6 +52,9 @@ namespace DesafioFinal
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DesafioFinal v1"));
             }
 
+            app.UseCors(acces => acces.AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowAnyOrigin());
             app.UseHttpsRedirection();
 
             app.UseRouting();

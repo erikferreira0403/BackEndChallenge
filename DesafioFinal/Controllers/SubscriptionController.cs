@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesafioFinal.Controllers
 {
+    
     [Route("api/Subscription")]
     [ApiController]
     public class SubscriptionController : ControllerBase
@@ -40,4 +41,5 @@ namespace DesafioFinal.Controllers
             return newStatus;
         }
     }
+    
 }

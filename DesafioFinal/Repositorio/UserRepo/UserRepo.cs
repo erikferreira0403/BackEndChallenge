@@ -12,25 +12,25 @@ namespace DesafioFinal.Repositorio.UserRepo
     public class UserRepo : IUserRepo
     {
         private readonly DataContext _dataContext;
-        private readonly IMessageConfiguration _messageConfiguration;
+      //  private readonly IMessageConfiguration _messageConfiguration;
 
-        public UserRepo(DataContext dataContext, IMessageConfiguration messageConfiguration)
+        public UserRepo(DataContext dataContext)
         {
             _dataContext = dataContext;
-            _messageConfiguration = messageConfiguration;
+         //   _messageConfiguration = messageConfiguration;
          
         }
 
         public async Task<User> Create(User user, string FullName)
         {
-            ;
+            
             var statusAtivo = "ativo";
             user.Subscription.Status.StatusEnum = statusAtivo;
             user.FullName = FullName;
-           
-          
-            _messageConfiguration.Enviar(user);
-            Save(user);
+         
+
+           // _messageConfiguration.Enviar(user);
+            await Save(user);
             return user;
         }
 
@@ -44,9 +44,9 @@ namespace DesafioFinal.Repositorio.UserRepo
              //var newUser = _messageConfiguration.Receber(user);
             
             _dataContext.Add(user);
-            _dataContext.SaveChangesAsync();
-            var newUser = _messageConfiguration.Receber(user);
-            return newUser;
+            await _dataContext.SaveChangesAsync();
+            //var newUser = _messageConfiguration.Receber(user);
+            return user;
         }
     }
 }

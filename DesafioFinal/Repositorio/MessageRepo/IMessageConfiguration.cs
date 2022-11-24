@@ -1,10 +1,12 @@
 ﻿using DesafioFinal.Models;
+using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.MessageRepo
 {
     public interface IMessageConfiguration
     {
         User Enviar(User messageModel);
-        User Receber(User messageModel);
+        Task IniciarFila();
+
     }
 }

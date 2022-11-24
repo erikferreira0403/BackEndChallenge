@@ -1,6 +1,7 @@
 ﻿using DesafioFinal.Models;
 using DesafioFinal.Repositorio.MessageRepo;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
@@ -16,10 +17,17 @@ namespace DesafioFinal.Controllers
            
             _configuration = configuration;
         }
-        [HttpPost]
+        [HttpPost("Enviar")]
         public IActionResult SendMessage([FromBody] User SendMessageInputModel)
         {
             _configuration.Enviar(SendMessageInputModel);
+            return Accepted();
+        }
+        
+        [HttpPost("iniciar Consumer")]
+        public IActionResult StartConsumer ()
+        {
+            _configuration.IniciarFila();
             return Accepted();
         }
     }
