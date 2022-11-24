@@ -66,11 +66,11 @@ namespace DesafioFinal.Repositorio.MessageRepo
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "hello",
-                                     durable: true,
-                                     exclusive: false, 
-                                     autoDelete: false,
-                                     arguments: null);
+                channel.QueueDeclare(queue: "game_results",
+                                  durable: false,
+                                  exclusive: false,
+                                  autoDelete: false,
+                                  arguments: null);
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
@@ -95,7 +95,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     }
                 };
 
-                channel.BasicConsume(queue: "hello",
+                channel.BasicConsume(queue: "game_results",
                                      autoAck: false,
                                      consumer: consumer);
 
