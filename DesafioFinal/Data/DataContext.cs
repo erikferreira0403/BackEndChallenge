@@ -14,11 +14,12 @@ namespace DesafioFinal.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Password=sa123456789@;Persist Security Info=True;User ID=sa;Initial Catalog=TesteEventoApp;Data Source=ATLANTICO03958");//aqui vou passar a string de conexão
+            optionsBuilder.UseSqlServer("Password=Numsey#2022;Persist Security Info=True;User ID=SA;Initial Catalog=TesteEventoApp;Data Source=localhost,1450");//aqui vou passar a string de conexão
 
         }
-        
+
         /*
+         * sa123456789@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Status>().HasData(new List<Status>()
@@ -29,6 +30,6 @@ namespace DesafioFinal.Data
             }); 
         }
         */
-        
+
     }
 }
