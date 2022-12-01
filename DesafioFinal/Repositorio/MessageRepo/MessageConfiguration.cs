@@ -82,7 +82,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     {
 
                         
-                         _userRepo.Create(order, order.FullName);
+                         _userRepo.Create(order);
 
                         channel.BasicAck(ea.DeliveryTag, true);
                        

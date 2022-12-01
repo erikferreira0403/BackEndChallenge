@@ -26,7 +26,7 @@ namespace DesafioFinal.Controllers
         [HttpPost("Criar/{FullName}")]
         public async Task<User> Create([FromBody]  User user, string FullName)
         {
-            var newUser = await _userRepo.Create(user, FullName);
+            var newUser = await _userRepo.Create(user);
             return newUser;
         }
     }

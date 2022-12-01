@@ -32,8 +32,6 @@ namespace DesafioFinal
             services.AddCors();
             { { } }
             services.AddInfrastructure();
-          //  services.AddControllers().AddJsonOptions(x =>
-         //   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -47,11 +45,11 @@ namespace DesafioFinal
 
             //_Messageconfig.Receber();
             if (env.IsDevelopment())
-            {
+            { }
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DesafioFinal v1"));
-            }
+            
 
             app.UseCors(acces => acces.AllowAnyHeader()
                                       .AllowAnyMethod()

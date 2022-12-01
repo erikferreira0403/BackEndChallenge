@@ -8,8 +8,8 @@ namespace DesafioFinal.Repositorio.UserRepo
     public interface IUserRepo
     {
         Task<IEnumerable<User>> Get();
-        Task<User> Create(User user, string FullName);
-
+        Task<User> Create(User user);
+            
         Task<User> Save(User user);
     }
 }

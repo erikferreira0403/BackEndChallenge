@@ -21,12 +21,12 @@ namespace DesafioFinal.Repositorio.UserRepo
          
         }
 
-        public async Task<User> Create(User user, string FullName)
+        public async Task<User> Create(User user)
         {
             
             var statusAtivo = "ativo";
             user.Subscription.Status.StatusEnum = statusAtivo;
-            user.FullName = FullName;
+           
          
 
            // _messageConfiguration.Enviar(user);

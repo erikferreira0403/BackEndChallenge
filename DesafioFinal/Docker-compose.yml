@@ -1,6 +1,8 @@
 services:
   desafiomvc:
     image: ${DOCKER_REGISTRY-}desafiofinal
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Development
     build:
       context: .
       dockerfile: C:\Users\erik_ferreira\Desktop\rabbit2.0\BackEndChallenge\DesafioFinal\Dockerfile
