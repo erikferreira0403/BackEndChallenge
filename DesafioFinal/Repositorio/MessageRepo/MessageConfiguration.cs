@@ -1,5 +1,6 @@
 ﻿using DesafioFinal.Data;
 using DesafioFinal.Models;
+using DesafioFinal.Repositorio.SubscriptionRepo;
 using DesafioFinal.Repositorio.UserRepo;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
@@ -7,6 +8,7 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.MessageRepo
@@ -15,21 +17,22 @@ namespace DesafioFinal.Repositorio.MessageRepo
     {
         private const string QUEUE_NAME = "messages";
         private readonly ConnectionFactory _factory;
-        private readonly DataContext _dataContext;
+        private readonly ISubscriptionRepo _repositorio;
         private readonly IUserRepo _userRepo;
 
-        public MessageConfiguration(DataContext dataContext, IUserRepo userRepo)
+        public MessageConfiguration(DataContext dataContext, IUserRepo userRepo, ISubscriptionRepo repo)
         {
             _factory = new ConnectionFactory
             {
 
                 HostName = "localhost"
             };
-            _dataContext = dataContext;
             _userRepo = userRepo;
+            _repositorio = repo;
+
 
         }
-        public  User Enviar(User messageModel)
+        public User Enviar(User messageModel)
         {
             using (var connection = _factory.CreateConnection())
             {
@@ -60,13 +63,13 @@ namespace DesafioFinal.Repositorio.MessageRepo
             return messageModel;
         }
 
-      public  async Task IniciarFila()
+        public async Task IniciarFilas()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "game_results",
+                channel.QueueDeclare(queue: "CriarUser",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
@@ -81,27 +84,115 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     try
                     {
 
-                        
-                         _userRepo.Create(order);
+
+                        _userRepo.Create(order);
 
                         channel.BasicAck(ea.DeliveryTag, true);
-                       
+
                     }
                     catch (Exception ex)
                     {
 
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
-                       
+
                     }
                 };
 
-                channel.BasicConsume(queue: "game_results",
+                channel.BasicConsume(queue: "CriarUser",
                                      autoAck: false,
                                      consumer: consumer);
 
-               
+
                 Console.ReadLine();
-                
+
+            }
+        }
+        public async Task IniciarFilaDesativar()
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue: "DesativarUser",
+                                  durable: false,
+                                  exclusive: false,
+                                  autoDelete: false,
+                                  arguments: null);
+
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
+                    try
+                    {
+
+
+                        _repositorio.Desativar(order);
+                        channel.BasicAck(ea.DeliveryTag, true);
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
+
+                    }
+                };
+
+                channel.BasicConsume(queue: "DesativarUser",
+                                     autoAck: false,
+                                     consumer: consumer);
+
+
+                Console.ReadLine();
+
+            }
+
+        }
+
+        public async Task IniciarFilaReativar()
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue: "ReativarUser",
+                                  durable: false,
+                                  exclusive: false,
+                                  autoDelete: false,
+                                  arguments: null);
+
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
+                    try
+                    {
+
+
+                        _repositorio.Reativar(order);
+                        channel.BasicAck(ea.DeliveryTag, true);
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
+
+                    }
+                };
+
+                channel.BasicConsume(queue: "ReativarUser",
+                                     autoAck: false,
+                                     consumer: consumer);
+
+
+                    Console.ReadLine();
+
             }
         }
     }

@@ -4,6 +4,7 @@ using DesafioFinal.Models;
 using DesafioFinal.Repositorio.MessageRepo;
 using DesafioFinal.Repositorio.SubscriptionRepo;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,7 +27,9 @@ namespace DesafioFinal.Repositorio.UserRepo
             
             var statusAtivo = "ativo";
             user.Subscription.Status.StatusEnum = statusAtivo;
-           
+            user.Subscription.CreatedAt = DateTime.Now;
+            user.CreatedAt = DateTime.Now;
+
          
 
            // _messageConfiguration.Enviar(user);

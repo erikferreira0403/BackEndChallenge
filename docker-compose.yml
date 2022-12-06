@@ -1,15 +1,17 @@
+version: '3.4'
+
+networks:
+  demoapp:
+
 services:
-  desafiomvc:
+  desafiofinal:
     image: ${DOCKER_REGISTRY-}desafiofinal
-    environment:
-     - ASPNETCORE_ENVIRONMENT=Development
     build:
       context: .
-      dockerfile: C:\Users\erik_ferreira\Desktop\rabbit2.0\BackEndChallenge\DesafioFinal\Dockerfile
+      dockerfile: DesafioFinal/Dockerfile
     ports:
-     - "8081:80"       
-    depends_on:
-     - sqldata
+      - "8080:80"
+      - "5001:443"
 
   sqldata:
     image: mcr.microsoft.com/mssql/server:2019-latest

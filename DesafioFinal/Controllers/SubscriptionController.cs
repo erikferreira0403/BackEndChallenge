@@ -25,8 +25,8 @@ namespace DesafioFinal.Controllers
 
         }
 
-        [HttpPost("Desativar/{id}")]
-        public async Task<Status> DesativarSubscription(int id, Status status)
+        [HttpPut("Desativar/{id}")]
+        public async Task<Status> DesativarSubscription(int id, [FromBody] Status status)
         {
             status.Id = id;
             var newStatus = await _repositorio.Desativar(status);
@@ -34,7 +34,7 @@ namespace DesafioFinal.Controllers
         }
 
         [HttpPost("Reativar/{id}")]
-        public async Task<Status> ReativarSubscription(int id, Status status)
+        public async Task<Status> ReativarSubscription( int id, [FromBody] Status status)
         {
             status.Id = id;
             var newStatus = await _repositorio.Reativar(status);

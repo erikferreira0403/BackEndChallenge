@@ -1,18 +1,22 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-EXPOSE 44319
-WORKDIR /App
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
 
-# Copy everything
-COPY *.csproj ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-COPY ../ ./
-RUN dotnet publish -c Release -o out
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY ["DesafioFinal/DesafioFinal.csproj", "DesafioFinal/"]
+RUN dotnet restore "DesafioFinal/DesafioFinal.csproj"
+COPY . .
+WORKDIR "/src/DesafioFinal"
+RUN dotnet build "DesafioFinal.csproj" -c Release -o /app/build
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
-WORKDIR /App
-COPY --from=build-env /App/out .
+FROM build AS publish
+RUN dotnet publish "DesafioFinal.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "DesafioFinal.dll"]

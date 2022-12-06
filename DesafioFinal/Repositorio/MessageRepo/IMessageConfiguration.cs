@@ -6,7 +6,9 @@ namespace DesafioFinal.Repositorio.MessageRepo
     public interface IMessageConfiguration
     {
         User Enviar(User messageModel);
-        Task IniciarFila();
+        Task IniciarFilas();
+        Task IniciarFilaDesativar();
+        Task IniciarFilaReativar();
 
     }
 }
