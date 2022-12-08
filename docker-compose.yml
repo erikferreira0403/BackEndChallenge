@@ -11,7 +11,15 @@ services:
       dockerfile: DesafioFinal/Dockerfile
     ports:
       - "8080:80"
+      - "62903:80"
       - "5001:443"
+      - "62902:443"
+    volumes:
+      - C:\dados\volumes\Rabbitmq\data:/var/lib/rabbitmq
+      - C:\dados\volumes\Rabbitmq\log:/var/log/rabbitmq
+    depends_on:
+      - "sqldata"
+      - "rabbitmq"
 
   sqldata:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -22,3 +30,19 @@ services:
       - c:\dados\volumes\mssql:/var/opt/mssql/data   
     ports:
       - "1450:1433"  
+    
+  rabbitmq:
+     image: rabbitmq:3-management
+     container_name: rabbitmq_management
+     hostname: "rabbitmq"
+     labels:
+        NAME: "rabbitmq"
+               
+     ports: 
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "25672:25672"
+      - "15671:15671"
+      - "15672:15672"
+        

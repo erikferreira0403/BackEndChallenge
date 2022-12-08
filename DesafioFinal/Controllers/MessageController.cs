@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using RabbitMQ.Client;
+using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,10 +22,13 @@ namespace DesafioFinal.Controllers
             _configuration = configuration;
             _repositorio = repo;
         }
+
         [HttpPost("Enviar")]
         public IActionResult SendMessage([FromBody] User SendMessageInputModel)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
+            factory.UserName = "guest";
+            factory.Password = "guest";
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())
@@ -46,7 +50,9 @@ namespace DesafioFinal.Controllers
         {
             status.Id = id;
 
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
+            factory.UserName = "guest";
+            factory.Password = "guest";
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())
@@ -68,7 +74,9 @@ namespace DesafioFinal.Controllers
         {
             status.Id = id;
 
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
+            factory.UserName = "guest";
+            factory.Password = "guest";
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())

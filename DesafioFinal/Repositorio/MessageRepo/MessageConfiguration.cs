@@ -25,13 +25,14 @@ namespace DesafioFinal.Repositorio.MessageRepo
             _factory = new ConnectionFactory
             {
 
-                HostName = "localhost"
+                HostName = "rabbitmq"
             };
             _userRepo = userRepo;
             _repositorio = repo;
 
 
         }
+
         public User Enviar(User messageModel)
         {
             using (var connection = _factory.CreateConnection())
@@ -65,11 +66,13 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
         public async Task IniciarFilas()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: "CriarUser",
+            ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
+            factory.UserName = "guest";
+            factory.Password = "guest";
+            IConnection conn = factory.CreateConnection();
+            IModel channel = conn.CreateModel();
+
+            channel.QueueDeclare(queue: "CriarUser",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
@@ -104,15 +107,15 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
 
                 Console.ReadLine();
-
-            }
         }
         public async Task IniciarFilaDesativar()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
+            ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
+            factory.UserName = "guest";
+            factory.Password = "guest";
+            IConnection conn = factory.CreateConnection();
+            IModel channel = conn.CreateModel();
+            
                 channel.QueueDeclare(queue: "DesativarUser",
                                   durable: false,
                                   exclusive: false,
@@ -148,13 +151,15 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
                 Console.ReadLine();
 
-            }
 
         }
 
         public async Task IniciarFilaReativar()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
+            factory.UserName = "guest";
+            factory.Password = "guest";
+
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
