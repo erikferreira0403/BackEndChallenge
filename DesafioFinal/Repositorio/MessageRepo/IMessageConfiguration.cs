@@ -9,6 +9,5 @@ namespace DesafioFinal.Repositorio.MessageRepo
         Task IniciarFilas();
         Task IniciarFilaDesativar();
         Task IniciarFilaReativar();
-
     }
 }

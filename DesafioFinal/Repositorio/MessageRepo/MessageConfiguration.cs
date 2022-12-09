@@ -1,14 +1,11 @@
-﻿using DesafioFinal.Data;
-using DesafioFinal.Models;
+﻿using DesafioFinal.Models;
 using DesafioFinal.Repositorio.SubscriptionRepo;
 using DesafioFinal.Repositorio.UserRepo;
-using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.MessageRepo
@@ -19,18 +16,14 @@ namespace DesafioFinal.Repositorio.MessageRepo
         private readonly ConnectionFactory _factory;
         private readonly ISubscriptionRepo _repositorio;
         private readonly IUserRepo _userRepo;
-
-        public MessageConfiguration(DataContext dataContext, IUserRepo userRepo, ISubscriptionRepo repo)
+        public MessageConfiguration(IUserRepo userRepo, ISubscriptionRepo repo)
         {
             _factory = new ConnectionFactory
             {
-
                 HostName = "rabbitmq"
             };
             _userRepo = userRepo;
             _repositorio = repo;
-
-
         }
 
         public User Enviar(User messageModel)
@@ -47,7 +40,6 @@ namespace DesafioFinal.Repositorio.MessageRepo
                         autoDelete: false,
                         arguments: null
                         );
-
                     //modelar os dados para envio para a fila
                     var stringMessage =
                         JsonSerializer.Serialize(messageModel);
@@ -66,7 +58,6 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
         public async Task IniciarFilas()
         {
-
             ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
             factory.UserName = "guest";
             factory.Password = "guest";
@@ -98,28 +89,17 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     }
                     catch (Exception ex)
                     {
-
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
-
                     }
                 };
 
                 channel.BasicConsume(queue: "CriarUser",
                                      autoAck: false,
                                      consumer: consumer);
-
-
                 Console.ReadLine();
         }
         public async Task IniciarFilaDesativar()
         {
-            for (int i = 0; i < 4; i++)
-            {
-                Task.Delay(1000).Wait();
-            }
-
-            Task.Delay(1000).Wait();
-
             ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
             factory.UserName = "guest";
             factory.Password = "guest";
@@ -147,36 +127,21 @@ namespace DesafioFinal.Repositorio.MessageRepo
                         Task.Delay(1000).Wait();
 
                         channel.BasicAck(ea.DeliveryTag, true);
-
                     }
                     catch (Exception ex)
                     {
-
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
-
                     }
                 };
 
                 channel.BasicConsume(queue: "DesativarUser",
                                      autoAck: false,
                                      consumer: consumer);
-
-
                 Console.ReadLine();
-
-
         }
 
         public async Task IniciarFilaReativar()
         {
-            
-            for (int i = 0; i < 4; i++)
-            {
-                Task.Delay(1000).Wait();
-            }
-
-            Task.Delay(1000).Wait();
-
             ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
             factory.UserName = "guest";
             factory.Password = "guest";
@@ -198,7 +163,6 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
                     try
                     {
-
                         Task.Delay(1000).Wait();
 
                         _repositorio.Reativar(order);
@@ -206,23 +170,16 @@ namespace DesafioFinal.Repositorio.MessageRepo
                         Task.Delay(1000).Wait();
 
                         channel.BasicAck(ea.DeliveryTag, true);
-
                     }
                     catch (Exception ex)
                     {
-
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
-
                     }
                 };
-
-                channel.BasicConsume(queue: "ReativarUser",
-                                     autoAck: false,
-                                     consumer: consumer);
-
-
+                    channel.BasicConsume(queue: "ReativarUser",
+                                         autoAck: false,
+                                         consumer: consumer);
                     Console.ReadLine();
-
             }
         }
     }

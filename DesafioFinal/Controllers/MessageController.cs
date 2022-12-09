@@ -2,13 +2,9 @@
 using DesafioFinal.Repositorio.MessageRepo;
 using DesafioFinal.Repositorio.SubscriptionRepo;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
 using RabbitMQ.Client;
-using System;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DesafioFinal.Controllers
 {
@@ -36,7 +32,7 @@ namespace DesafioFinal.Controllers
                     channel.QueueDeclare(queue: "CriarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                     var stringMessage =
-                 JsonSerializer.Serialize(SendMessageInputModel);
+                     JsonSerializer.Serialize(SendMessageInputModel);
                     var byteArray = Encoding.UTF8.GetBytes(stringMessage);
 
                     channel.BasicPublish(exchange: "", routingKey: "CriarUser", basicProperties: null, body: byteArray);
@@ -60,7 +56,7 @@ namespace DesafioFinal.Controllers
                     channel.QueueDeclare(queue: "DesativarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                     var stringMessage =
-                 JsonSerializer.Serialize(status);
+                     JsonSerializer.Serialize(status);
                     var byteArray = Encoding.UTF8.GetBytes(stringMessage);
 
                     channel.BasicPublish(exchange: "", routingKey: "DesativarUser", basicProperties: null, body: byteArray);
@@ -84,7 +80,7 @@ namespace DesafioFinal.Controllers
                     channel.QueueDeclare(queue: "ReativarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
                     var stringMessage =
-                 JsonSerializer.Serialize(status);
+                    JsonSerializer.Serialize(status);
                     var byteArray = Encoding.UTF8.GetBytes(stringMessage);
 
                     channel.BasicPublish(exchange: "", routingKey: "ReativarUser", basicProperties: null, body: byteArray);
@@ -112,6 +108,5 @@ namespace DesafioFinal.Controllers
             _configuration.IniciarFilaReativar();
             return Accepted();
         }
-
     }
 }

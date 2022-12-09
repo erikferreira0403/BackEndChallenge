@@ -22,7 +22,6 @@ namespace DesafioFinal.Controllers
         public async Task<IEnumerable<Subscription>> GetSubscriptions()
         {
             return await _repositorio.Get();
-
         }
 
         [HttpPut("Desativar/{id}")]
