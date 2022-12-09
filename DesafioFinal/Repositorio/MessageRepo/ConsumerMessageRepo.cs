@@ -10,57 +10,26 @@ using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.MessageRepo
 {
-    public class MessageConfiguration : IMessageConfiguration
+    public class ConsumerMessageRepo : IConsumerMessageRepo
     {
-        private const string QUEUE_NAME = "messages";
-        private readonly ConnectionFactory _factory;
+        private readonly ConnectionFactory factory;
         private readonly ISubscriptionRepo _repositorio;
         private readonly IUserRepo _userRepo;
-        public MessageConfiguration(IUserRepo userRepo, ISubscriptionRepo repo)
+        public ConsumerMessageRepo(IUserRepo userRepo, ISubscriptionRepo repo)
         {
-            _factory = new ConnectionFactory
+            factory = new ConnectionFactory
             {
-                HostName = "rabbitmq"
+                HostName = "rabbitmq",
+                Port = 5672
             };
+            factory.UserName = "guest";
+            factory.Password = "guest";
             _userRepo = userRepo;
             _repositorio = repo;
         }
 
-        public User Enviar(User messageModel)
+        public async Task IniciarFilaCriar()
         {
-            using (var connection = _factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    // Declara fila para que caso ela ainda não exista, eu crie ela.
-                    channel.QueueDeclare(
-                        queue: QUEUE_NAME,
-                        durable: false,
-                        exclusive: false,
-                        autoDelete: false,
-                        arguments: null
-                        );
-                    //modelar os dados para envio para a fila
-                    var stringMessage =
-                        JsonSerializer.Serialize(messageModel);
-                    var byteArray = Encoding.UTF8.GetBytes(stringMessage);
-
-                    channel.BasicPublish(
-                       exchange: "",
-                       routingKey: "hello",
-                       basicProperties: null,
-                       body: byteArray
-                        );
-                }
-            }
-            return messageModel;
-        }
-
-        public async Task IniciarFilas()
-        {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
-            factory.UserName = "guest";
-            factory.Password = "guest";
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();
 
@@ -100,13 +69,10 @@ namespace DesafioFinal.Repositorio.MessageRepo
         }
         public async Task IniciarFilaDesativar()
         {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
-            factory.UserName = "guest";
-            factory.Password = "guest";
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();
             
-                channel.QueueDeclare(queue: "DesativarUser",
+            channel.QueueDeclare(queue: "DesativarUser",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
@@ -142,14 +108,10 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
         public async Task IniciarFilaReativar()
         {
-            ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
-            factory.UserName = "guest";
-            factory.Password = "guest";
+            IConnection conn = factory.CreateConnection();
+            IModel channel = conn.CreateModel();
 
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: "ReativarUser",
+            channel.QueueDeclare(queue: "ReativarUser",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: false,
@@ -183,4 +145,4 @@ namespace DesafioFinal.Repositorio.MessageRepo
             }
         }
     }
-}
+

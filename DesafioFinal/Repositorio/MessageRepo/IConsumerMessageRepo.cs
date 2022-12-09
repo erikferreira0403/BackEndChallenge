@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.MessageRepo
 {
-    public interface IMessageConfiguration
+    public interface IConsumerMessageRepo
     {
-        User Enviar(User messageModel);
-        Task IniciarFilas();
+        Task IniciarFilaCriar();
         Task IniciarFilaDesativar();
         Task IniciarFilaReativar();
     }

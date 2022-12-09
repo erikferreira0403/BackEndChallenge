@@ -13,7 +13,8 @@ namespace DesafioFinal
             services.AddDbContext<DataContext>();
             services.AddScoped<ISubscriptionRepo, SubscriptionRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
-            services.AddScoped<IMessageConfiguration, MessageConfiguration>();
+            services.AddScoped<IConsumerMessageRepo, ConsumerMessageRepo>();
+            services.AddScoped<ISendMessageRepo, SendMessageRepo>();
             return services;
         }
     }
