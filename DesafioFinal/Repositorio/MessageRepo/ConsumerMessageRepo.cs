@@ -5,7 +5,6 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.MessageRepo
@@ -20,15 +19,15 @@ namespace DesafioFinal.Repositorio.MessageRepo
             factory = new ConnectionFactory
             {
                 HostName = "rabbitmq",
-                Port = 5672
+                Port = 5672,
+                UserName = "guest",
+                Password = "guest"
             };
-            factory.UserName = "guest";
-            factory.Password = "guest";
             _userRepo = userRepo;
             _repositorio = repo;
         }
 
-        public async Task IniciarFilaCriar()
+        public void IniciarFilaCriar()
         {
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();
@@ -40,7 +39,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                                   arguments: null);
 
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
+                consumer.Received += async (model, ea) =>
                 {
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
@@ -49,7 +48,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     {
                         Task.Delay(1000).Wait();
 
-                        _userRepo.Create(order);
+                         _userRepo.Create(order);
 
                         Task.Delay(1000).Wait();
 
@@ -68,7 +67,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                                      consumer: consumer);
                 Console.ReadLine();
         }
-        public async Task IniciarFilaDesativar()
+        public void IniciarFilaDesativar()
         {
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();
@@ -108,7 +107,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                 Console.ReadLine();
         }
 
-        public async Task IniciarFilaReativar()
+        public void IniciarFilaReativar()
         {
             IConnection conn = factory.CreateConnection();
             IModel channel = conn.CreateModel();

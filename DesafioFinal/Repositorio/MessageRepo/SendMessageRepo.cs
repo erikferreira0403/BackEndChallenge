@@ -14,30 +14,28 @@ namespace DesafioFinal.Repositorio.MessageRepo
             factory = new ConnectionFactory
             {
                 HostName = "rabbitmq",
-                Port = 5672
+                Port = 5672,
+                UserName = "guest",
+                Password = "guest"
             };
-            factory.UserName = "guest";
-            factory.Password = "guest";
         }
         public User CriarUsuário(User messageModel)
         {
             using (var connection = factory.CreateConnection())
             {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.QueueDeclare(queue: "CriarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
+                using var channel = connection.CreateModel();
+                channel.QueueDeclare(queue: "CriarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
-                    var stringMessage =
-                     JsonSerializer.Serialize(messageModel);
-                    var byteArray = Encoding.UTF8.GetBytes(stringMessage);
-                    try
-                    {
-                        channel.BasicPublish(exchange: "", routingKey: "CriarUser", basicProperties: null, body: byteArray);
-                    }
-                    catch(Exception ex)
-                    {
-                        throw new System.Exception(ex.Message);
-                    }
+                var stringMessage =
+                 JsonSerializer.Serialize(messageModel);
+                var byteArray = Encoding.UTF8.GetBytes(stringMessage);
+                try
+                {
+                    channel.BasicPublish(exchange: "", routingKey: "CriarUser", basicProperties: null, body: byteArray);
+                }
+                catch (Exception ex)
+                {
+                    throw new System.Exception(ex.Message);
                 }
             }
             return messageModel;
@@ -48,22 +46,20 @@ namespace DesafioFinal.Repositorio.MessageRepo
             status.Id = Id;
             using (var connection = factory.CreateConnection())
             {
-                using (var channel = connection.CreateModel())
+                using var channel = connection.CreateModel();
+                channel.QueueDeclare(queue: "DesativarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+                var stringMessage =
+                JsonSerializer.Serialize(status);
+                var byteArray = Encoding.UTF8.GetBytes(stringMessage);
+
+                try
                 {
-                    channel.QueueDeclare(queue: "DesativarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-                    var stringMessage =
-                    JsonSerializer.Serialize(status);
-                    var byteArray = Encoding.UTF8.GetBytes(stringMessage);
-
-                    try
-                    {
-                        channel.BasicPublish(exchange: "", routingKey: "DesativarUser", basicProperties: null, body: byteArray);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new System.Exception(ex.Message);
-                    }
+                    channel.BasicPublish(exchange: "", routingKey: "DesativarUser", basicProperties: null, body: byteArray);
+                }
+                catch (Exception ex)
+                {
+                    throw new System.Exception(ex.Message);
                 }
             }
             return status;
@@ -74,22 +70,20 @@ namespace DesafioFinal.Repositorio.MessageRepo
             status.Id = Id;
             using (var connection = factory.CreateConnection())
             {
-                using (var channel = connection.CreateModel())
+                using var channel = connection.CreateModel();
+                channel.QueueDeclare(queue: "ReativarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+                var stringMessage =
+                JsonSerializer.Serialize(status);
+                var byteArray = Encoding.UTF8.GetBytes(stringMessage);
+
+                try
                 {
-                    channel.QueueDeclare(queue: "ReativarUser", durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-                    var stringMessage =
-                    JsonSerializer.Serialize(status);
-                    var byteArray = Encoding.UTF8.GetBytes(stringMessage);
-
-                    try
-                    {
-                        channel.BasicPublish(exchange: "", routingKey: "ReativarUser", basicProperties: null, body: byteArray);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new System.Exception(ex.Message);
-                    }
+                    channel.BasicPublish(exchange: "", routingKey: "ReativarUser", basicProperties: null, body: byteArray);
+                }
+                catch (Exception ex)
+                {
+                    throw new System.Exception(ex.Message);
                 }
             }
             return status;

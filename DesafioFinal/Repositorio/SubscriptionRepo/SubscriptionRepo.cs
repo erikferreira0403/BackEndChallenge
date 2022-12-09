@@ -15,6 +15,7 @@ namespace DesafioFinal.Repositorio.SubscriptionRepo
         {
             _dataContext = dataContext;
         }
+
         public async Task<Status> Desativar(Status status)
         {
             Status statusDb = ListarPorId(status.Id);

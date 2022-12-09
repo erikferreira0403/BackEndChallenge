@@ -5,8 +5,8 @@ namespace DesafioFinal.Repositorio.MessageRepo
 {
     public interface IConsumerMessageRepo
     {
-        Task IniciarFilaCriar();
-        Task IniciarFilaDesativar();
-        Task IniciarFilaReativar();
+        void IniciarFilaCriar();
+        void IniciarFilaDesativar();
+        void IniciarFilaReativar();
     }
 }
