@@ -66,6 +66,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
         public async Task IniciarFilas()
         {
+
             ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
             factory.UserName = "guest";
             factory.Password = "guest";
@@ -86,9 +87,11 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     var order = System.Text.Json.JsonSerializer.Deserialize<User>(body);
                     try
                     {
-
+                        Task.Delay(1000).Wait();
 
                         _userRepo.Create(order);
+
+                        Task.Delay(1000).Wait();
 
                         channel.BasicAck(ea.DeliveryTag, true);
 
@@ -110,6 +113,13 @@ namespace DesafioFinal.Repositorio.MessageRepo
         }
         public async Task IniciarFilaDesativar()
         {
+            for (int i = 0; i < 4; i++)
+            {
+                Task.Delay(1000).Wait();
+            }
+
+            Task.Delay(1000).Wait();
+
             ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
             factory.UserName = "guest";
             factory.Password = "guest";
@@ -130,9 +140,12 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
                     try
                     {
-
+                        Task.Delay(1000).Wait();
 
                         _repositorio.Desativar(order);
+
+                        Task.Delay(1000).Wait();
+
                         channel.BasicAck(ea.DeliveryTag, true);
 
                     }
@@ -156,6 +169,14 @@ namespace DesafioFinal.Repositorio.MessageRepo
 
         public async Task IniciarFilaReativar()
         {
+            
+            for (int i = 0; i < 4; i++)
+            {
+                Task.Delay(1000).Wait();
+            }
+
+            Task.Delay(1000).Wait();
+
             ConnectionFactory factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672 };
             factory.UserName = "guest";
             factory.Password = "guest";
@@ -178,8 +199,12 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     try
                     {
 
+                        Task.Delay(1000).Wait();
 
                         _repositorio.Reativar(order);
+
+                        Task.Delay(1000).Wait();
+
                         channel.BasicAck(ea.DeliveryTag, true);
 
                     }

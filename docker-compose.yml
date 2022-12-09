@@ -11,9 +11,8 @@ services:
       dockerfile: DesafioFinal/Dockerfile
     ports:
       - "8080:80"
-      - "62903:80"
       - "5001:443"
-      - "62902:443"
+  
     volumes:
       - C:\dados\volumes\Rabbitmq\data:/var/lib/rabbitmq
       - C:\dados\volumes\Rabbitmq\log:/var/log/rabbitmq
