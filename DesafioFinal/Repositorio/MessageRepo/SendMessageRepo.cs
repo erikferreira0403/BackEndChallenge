@@ -1,5 +1,6 @@
 ﻿using DesafioFinal.Models;
 using RabbitMQ.Client;
+using System;
 using System.Text;
 using System.Text.Json;
 
@@ -29,8 +30,14 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     var stringMessage =
                      JsonSerializer.Serialize(messageModel);
                     var byteArray = Encoding.UTF8.GetBytes(stringMessage);
-
-                    channel.BasicPublish(exchange: "", routingKey: "CriarUser", basicProperties: null, body: byteArray);
+                    try
+                    {
+                        channel.BasicPublish(exchange: "", routingKey: "CriarUser", basicProperties: null, body: byteArray);
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new System.Exception(ex.Message);
+                    }
                 }
             }
             return messageModel;
@@ -49,7 +56,14 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     JsonSerializer.Serialize(status);
                     var byteArray = Encoding.UTF8.GetBytes(stringMessage);
 
-                    channel.BasicPublish(exchange: "", routingKey: "DesativarUser", basicProperties: null, body: byteArray);
+                    try
+                    {
+                        channel.BasicPublish(exchange: "", routingKey: "DesativarUser", basicProperties: null, body: byteArray);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new System.Exception(ex.Message);
+                    }
                 }
             }
             return status;
@@ -68,7 +82,14 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     JsonSerializer.Serialize(status);
                     var byteArray = Encoding.UTF8.GetBytes(stringMessage);
 
-                    channel.BasicPublish(exchange: "", routingKey: "ReativarUser", basicProperties: null, body: byteArray);
+                    try
+                    {
+                        channel.BasicPublish(exchange: "", routingKey: "ReativarUser", basicProperties: null, body: byteArray);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new System.Exception(ex.Message);
+                    }
                 }
             }
             return status;

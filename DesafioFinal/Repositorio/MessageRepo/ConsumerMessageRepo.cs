@@ -59,6 +59,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     catch (Exception ex)
                     {
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
+                        throw new System.Exception(ex.Message);
                     }
                 };
 
@@ -97,6 +98,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     catch (Exception ex)
                     {
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
+                        throw new System.Exception(ex.Message);
                     }
                 };
 
@@ -136,6 +138,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     catch (Exception ex)
                     {
                         channel.BasicNack(ea.DeliveryTag, false, true);//recolocar o item na fila e deixar disponível
+                        throw new System.Exception(ex.Message);
                     }
                 };
                     channel.BasicConsume(queue: "ReativarUser",
