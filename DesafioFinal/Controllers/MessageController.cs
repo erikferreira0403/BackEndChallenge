@@ -47,14 +47,12 @@ namespace DesafioFinal.Controllers
         public IActionResult StartConsumer ()
         {
             _configuration.IniciarFilaCriar();
-            Task.Delay(60000).Wait();
             return Ok();
         }
         [HttpPut("iniciar Consumer Desativar")]
         public IActionResult StartConsumerDesativar()
         {
             _configuration.IniciarFilaDesativar();
-            Task.Delay(60000).Wait();
             return Ok();
         }
 
@@ -62,7 +60,6 @@ namespace DesafioFinal.Controllers
         public IActionResult StartConsumerReativar()
         {
             _configuration.IniciarFilaReativar();
-            Task.Delay(60000).Wait();
             return Ok();
         }
     }
