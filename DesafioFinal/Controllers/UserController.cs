@@ -1,4 +1,5 @@
 ﻿using DesafioFinal.Models;
+using DesafioFinal.Repositorio.SubscriptionRepo;
 using DesafioFinal.Repositorio.UserRepo;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
@@ -12,9 +13,11 @@ namespace DesafioFinal.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepo _userRepo;
-        public UserController(IUserRepo userRepo)
+        private readonly ISubscriptionRepo _subscriptionRepo;
+        public UserController(IUserRepo userRepo, ISubscriptionRepo subscriptionRepo)
         {
             _userRepo = userRepo;
+            _subscriptionRepo = subscriptionRepo;
         }
 
         [HttpGet]
@@ -22,11 +25,16 @@ namespace DesafioFinal.Controllers
         {
             return await _userRepo.Get();
         }
-
+        [HttpGet("Get By Id/{id}")]
+        public async Task<User> GetUserbyId(int id)
+        {
+            return _userRepo.ListarPorId(id);
+        }
         [HttpPost("Criar/{FullName}")]
         public async Task<User> Create([FromBody]  User user, string FullName)
         {
             var newUser = await _userRepo.Create(user);
+            await _subscriptionRepo.NewSubscription(newUser.Id);
             return newUser;
         }
     }

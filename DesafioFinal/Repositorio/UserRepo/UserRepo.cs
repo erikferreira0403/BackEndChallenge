@@ -6,6 +6,7 @@ using DesafioFinal.Repositorio.SubscriptionRepo;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DesafioFinal.Repositorio.UserRepo
@@ -13,17 +14,14 @@ namespace DesafioFinal.Repositorio.UserRepo
     public class UserRepo : IUserRepo
     {
         private readonly DataContext _dataContext;
-        public UserRepo(DataContext dataContext)
+        private readonly ISubscriptionRepo _subscriptionRepo;
+        public UserRepo(DataContext dataContext, ISubscriptionRepo subscriptionRepo)
         {
             _dataContext = dataContext;
+            _subscriptionRepo = subscriptionRepo;
         }
         public async Task<User> Create(User user)
         {
-            var statusAtivo = "ativo";
-            user.Subscription.Status.StatusEnum = statusAtivo;
-            user.Subscription.CreatedAt = DateTime.Now;
-            user.CreatedAt = DateTime.Now;
-
             await Save(user);
             return user;
         }
@@ -31,6 +29,18 @@ namespace DesafioFinal.Repositorio.UserRepo
         {
             return await _dataContext.Users.ToListAsync();
         }
+
+        public User ListarPorId(int Id)
+        {
+            return _dataContext.Users.Find(Id);
+        }
+
+        public int NewSubUser(int id)
+        {
+             _subscriptionRepo.NewSubscription(id);
+            return id;
+        }
+
         public async Task<User> Save(User user)
         {
             _dataContext.Add(user);

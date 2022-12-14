@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DesafioFinal.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221113213244_UserSubscriptionFK")]
-    partial class UserSubscriptionFK
+    [Migration("20221214143056_UpdateUser")]
+    partial class UpdateUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,13 +31,14 @@ namespace DesafioFinal.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SubscriptionId")
+                    b.Property<int?>("SubscriptionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SubscriptionId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[SubscriptionId] IS NOT NULL");
 
                     b.ToTable("EventHistories");
                 });
@@ -67,18 +68,15 @@ namespace DesafioFinal.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusId")
+                    b.Property<int?>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StatusId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Subscriptions");
                 });
@@ -105,9 +103,7 @@ namespace DesafioFinal.Migrations
                 {
                     b.HasOne("DesafioFinal.Models.Subscription", "Subscription")
                         .WithOne("EventHistory")
-                        .HasForeignKey("DesafioFinal.Models.EventHistory", "SubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DesafioFinal.Models.EventHistory", "SubscriptionId");
 
                     b.Navigation("Subscription");
                 });
@@ -116,29 +112,14 @@ namespace DesafioFinal.Migrations
                 {
                     b.HasOne("DesafioFinal.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DesafioFinal.Models.User", "User")
-                        .WithOne("Subscription")
-                        .HasForeignKey("DesafioFinal.Models.Subscription", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StatusId");
 
                     b.Navigation("Status");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DesafioFinal.Models.Subscription", b =>
                 {
                     b.Navigation("EventHistory");
-                });
-
-            modelBuilder.Entity("DesafioFinal.Models.User", b =>
-                {
-                    b.Navigation("Subscription");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,12 +2,10 @@
 {
     public class Status
     {
-        public Status(int id, string statusEnum)
+        public Status()
         {
-            Id = id;
-            StatusEnum = statusEnum;
-        }
 
+        }
         public int Id { get; set; }
         public string StatusEnum { get; set; }
     }

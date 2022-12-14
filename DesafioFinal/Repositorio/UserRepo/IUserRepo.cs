@@ -10,5 +10,6 @@ namespace DesafioFinal.Repositorio.UserRepo
         Task<IEnumerable<User>> Get();
         Task<User> Create(User user);
         Task<User> Save(User user);
+        User ListarPorId(int Id);
     }
 }

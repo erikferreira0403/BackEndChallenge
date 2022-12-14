@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DesafioFinal.Controllers
 {
-    
+
     [Route("api/Subscription")]
     [ApiController]
     public class SubscriptionController : ControllerBase
@@ -23,21 +23,27 @@ namespace DesafioFinal.Controllers
         {
             return await _repositorio.Get();
         }
-
+        [HttpGet("{Id}")]
+        public async Task<IEnumerable<Subscription>> GetSubById(int Id)
+        {
+            return await _repositorio.ListarSubPorId(Id);
+        }
         [HttpPut("Desativar/{id}")]
         public async Task<Status> DesativarSubscription(int id, [FromBody] Status status)
         {
             status.Id = id;
-            var newStatus = await _repositorio.Desativar(status);
-            return newStatus;
+            var newsub = await _repositorio.NewSubscription(id);
+            await _repositorio.Desativar(newsub.Status);
+            return newsub.Status;
         }
 
         [HttpPost("Reativar/{id}")]
         public async Task<Status> ReativarSubscription( int id, [FromBody] Status status)
         {
             status.Id = id;
-            var newStatus = await _repositorio.Reativar(status);
-            return newStatus;
+            var newsub = await _repositorio.NewSubscription(id);
+            await _repositorio.Reativar(status);
+            return newsub.Status;
         }
     }
     
