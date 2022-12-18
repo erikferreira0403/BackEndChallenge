@@ -42,7 +42,7 @@ namespace DesafioFinal.Controllers
         {
             status.Id = id;
             var newsub = await _repositorio.NewSubscription(id);
-            await _repositorio.Reativar(status);
+            await _repositorio.Reativar(newsub.Status);
             return newsub.Status;
         }
     }

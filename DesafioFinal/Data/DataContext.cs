@@ -14,7 +14,7 @@ namespace DesafioFinal.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Password=Numsey#2022;Persist Security Info=True;User ID=SA;Initial Catalog=TesteEventoApp;Data Source=sqldata");//aqui vou passar a string de conexão
+            optionsBuilder.UseSqlServer("Password=Numsey#2022;Persist Security Info=True;User ID=SA;Initial Catalog=TesteEventoApp;Data Source=sqldata");
         }
     }
 }

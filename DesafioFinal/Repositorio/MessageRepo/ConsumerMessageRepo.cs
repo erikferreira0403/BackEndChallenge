@@ -48,7 +48,11 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     {
                         Task.Delay(1000).Wait();
 
-                        await _userRepo.Create(order);
+                         var newOrder = await _userRepo.Create(order);
+
+                        Task.Delay(1000).Wait();
+
+                        await _repositorio.NewSubscription(newOrder.Id);
 
                         Task.Delay(1000).Wait();
 
@@ -85,16 +89,18 @@ namespace DesafioFinal.Repositorio.MessageRepo
                                   arguments: null);
 
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
+                consumer.Received += async (model, ea) =>
                 {
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
                     try
                     {
+                        var newOrder = await _repositorio.NewSubscription(order.Id);
+
                         Task.Delay(1000).Wait();
 
-                        _repositorio.Desativar(order);
+                         await _repositorio.Desativar(newOrder.Status);
 
                         Task.Delay(1000).Wait();
 
@@ -132,16 +138,18 @@ namespace DesafioFinal.Repositorio.MessageRepo
                                   arguments: null);
 
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
                 try
                 {
+                    var newOrder = await _repositorio.NewSubscription(order.Id);
+
                     Task.Delay(1000).Wait();
 
-                    _repositorio.Reativar(order);
+                    await _repositorio.Reativar(newOrder.Status); 
 
                     Task.Delay(1000).Wait();
 
@@ -163,7 +171,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
             Task.Delay(2000).Wait();
 
             channel.Dispose();
-            Task.Delay(2000).Wait(); ;
+            Task.Delay(2000).Wait();
         }
      }
  }
