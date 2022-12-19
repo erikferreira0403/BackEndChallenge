@@ -20,6 +20,7 @@ namespace DesafioFinal.Repositorio.UserRepo
         }
         public async Task<User> Create(User user)
         {
+            user.CreatedAt = DateTime.Now;
             _dataContext.Add(user);
             await _dataContext.SaveChangesAsync();
             return user;

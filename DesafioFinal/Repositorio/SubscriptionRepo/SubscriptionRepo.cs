@@ -4,6 +4,7 @@ using DesafioFinal.Repositorio.UserRepo;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,6 +60,7 @@ namespace DesafioFinal.Repositorio.SubscriptionRepo
                 StatusEnum = "ativo"
             };
             newSubscription.EventHistory = new();
+            newSubscription.CreatedAt = System.DateTime.Now;
 
             _dataContext.Add(newSubscription);
             await _dataContext.SaveChangesAsync();
