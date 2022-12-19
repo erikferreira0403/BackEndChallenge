@@ -96,6 +96,7 @@ namespace DesafioFinal.Repositorio.MessageRepo
                     var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
                     try
                     {
+                        Task.Delay(1000).Wait();
                         var newOrder = await _repositorio.NewSubscription(order.Id);
 
                         Task.Delay(1000).Wait();
@@ -145,11 +146,12 @@ namespace DesafioFinal.Repositorio.MessageRepo
                 var order = System.Text.Json.JsonSerializer.Deserialize<Status>(body);
                 try
                 {
+                    Task.Delay(1000).Wait();
                     var newOrder = await _repositorio.NewSubscription(order.Id);
 
                     Task.Delay(1000).Wait();
 
-                    await _repositorio.Reativar(newOrder.Status); 
+                    await _repositorio.Reativar(newOrder.Status);
 
                     Task.Delay(1000).Wait();
 
